@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<title>Ghi Sổ Tiết Dạy - WebApp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+
+/* ========== FORM LOGIN MỚI ========== */
+#login-form {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+#login-form h2 {
+  color: #27ae60;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+#login-form h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #27ae60;
+  border-radius: 3px;
+}
+
+#login-form input[type="text"],
+#login-form input[type="password"] {
+  padding: 14px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s;
+  margin-bottom: 15px;
+  width: 100%; /* Cập nhật */
+}
+
+#login-form input[type="text"]:focus,
+#login-form input[type="password"]:focus {
+  border-color: #27ae60;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+}
+
+#login-form label {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+#login-form button[type="submit"] {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#login-form button[type="submit"]:hover {
+  background: #219653;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#login-form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.login-footer {
+  margin-top: 25px;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+
+
+/* Responsive */
+@media (max-width: 480px) {
+  #login-form {
+    padding: 30px 20px;
+  }
+  
+  .login-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+  /* Reset cơ bản */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f8;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: #27ae60;
+    color: white;
+    padding: 16px 24px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Thêm để header có thể xuống dòng */
+    gap: 10px; /* Thêm khoảng cách giữa các item */
+  }
+  header .actions button {
+    background: #1e8449;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.25s ease;
+  }
+  header .actions button:hover {
+    background-color: #145a32;
+  }
+
+/* ========== THIẾT KẾ CHO KHU VỰC HIỂN THỊ TÊN GIÁO VIÊN ========== */
+header .actions {
+  display: flex;
+  align-items: center; /* Căn giữa các mục theo chiều dọc */
+  gap: 12px; /* Thêm khoảng cách giữa các mục */
+}
+
+#teacher-display {
+    display: flex; /* Sử dụng flex để căn icon và chữ */
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa icon và tên */
+    background-color: rgba(255, 255, 255, 0.2); /* Màu nền hơi trong suốt */
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Viền mờ */
+}
+
+#teacher-display .fa-user-check {
+    font-size: 1.1em; /* Kích thước icon */
+}
+
+  main {
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 24px auto;
+    background: white;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  h2 {
+    margin-top: 0;
+    color: #27ae60;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  input[type="text"],
+  input[type="password"],
+  input[type="date"],
+  input[type="datetime-local"],
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus,
+  input[type="datetime-local"]:focus,
+  select:focus {
+    border-color: #27ae60;
+    outline: none;
+  }
+
+  /* Thay đổi để hiển thị trường bị khóa */
+  input[readonly] {
+    background-color: #eeeeee; /* Màu nền xám hơn */
+    cursor: not-allowed;   /* Con trỏ không cho phép */
+  }
+
+
+  label {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .row {
+    display: flex;
+    gap: 20px;
+  }
+  .row > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .row-datetime-location {
+    display: flex;
+    gap: 20px;
+  }
+  .row-datetime-location > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .note {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  button[type="submit"] {
+    margin-top: 10px;
+    padding: 12px 0;
+    background: #27ae60;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button[type="submit"]:hover {
+    background: #219150;
+  }
+
+  #login-error {
+    color: #e74c3c;
+    font-weight: 600;
+    min-height: 1.2em;
+  }
+
+  /* Checkbox inline label */
+  label > input[type="checkbox"] {
+    margin-right: 6px;
+    transform: scale(1.15);
+    vertical-align: middle;
+  }
+
+/* ========== GIAO DIỆN LỊCH SỬ MỚI ========== */
+#history-popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5500;
+    padding: 16px;
+}
+.history-panel {
+    background: white;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 500px; /* Thu nhỏ lại cho giao diện dọc */
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgb(0 0 0 / 0.25);
+}
+.history-head {
+    padding: 18px 24px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.history-head h3 {
+    margin: 0;
+    font-weight: 700;
+    color: #27ae60;
+}
+.close-history {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.3s ease;
+}
+.close-history:hover {
+    color: #e74c3c;
+}
+.history-filters {
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #ddd;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex-wrap: nowrap; /* Tắt tính năng xuống dòng để giữ trên một hàng */
+    overflow-x: auto;
+}
+
+.history-filters label {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+#history-date {
+    flex-grow: 1;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+}
+
+#history-search {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border: none;
+    background: #27ae60;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex; /* Bật flexbox cho nút */
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa icon và chữ */
+    transition: background-color 0.3s ease;
+}
+#history-search:hover {
+    background: #1e8449;
+}
+
+/* Ẩn chữ "Tìm kiếm" trên màn hình nhỏ */
+@media (max-width: 480px) {
+  #history-search .search-text {
+    display: none;
+  }
+  #history-search {
+    padding: 10px; /* Điều chỉnh padding cho nút chỉ có icon */
+  }
+  #history-search .fas {
+    font-size: 1.1rem; /* Tăng kích thước icon */
+  }
+}
+}
+#history-search:hover {
+    background: #1e8449;
+}
+
+#history-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+#history-record-display .field-group {
+    margin-bottom: 12px;
+}
+#history-record-display label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 2px;
+    font-weight: 600;
+}
+/* Style cho dữ liệu hiển thị giống input */
+#history-record-display .data, 
+#history-record-display input, 
+#history-record-display select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f4f4f4;
+}
+
+#history-record-display input, #history-record-display select {
+    background-color: #fff; /* Nền trắng khi chỉnh sửa */
+}
+
+
+#history-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+#history-navigation button {
+    padding: 8px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #27ae60;
+    background-color: white;
+    color: #27ae60;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+#history-navigation button:hover {
+    background-color: #27ae60;
+    color: white;
+}
+#history-navigation button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e0e0e0;
+    border-color: #e0e0e0;
+    color: #999;
+}
+#history-counter {
+    font-weight: 600;
+    color: #333;
+}
+
+#history-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+#history-actions button {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn-edit {
+    background: #f39c12;
+}
+.btn-update {
+    background: #27ae60;
+}
+.btn-delete {
+    background: #e74c3c;
+}
+.btn-cancel {
+    background: #95a5a6;
+}
+
+/* Ẩn/hiện các nút tùy theo mode */
+.view-mode .edit-controls,
+.edit-mode .view-controls {
+    display: none;
+}
+
+
+  /* Loading overlay */
+  #loading-overlay {
+    display: none;
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.3);
+    justify-content: center;
+    align-items: center;
+    z-index: 6000;
+  }
+  .spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #27ae60;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+  }
+
+  /* Popup message */
+  #popup-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #27ae60;
+    color: white;
+    padding: 14px 26px;
+    border-radius: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 0.3);
+    z-index: 6001;
+    min-width: 240px;
+    text-align: center;
+    user-select: none;
+  }
+  #popup-message.error {
+    background: #e74c3c;
+  }
+  #popup-message .popup-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+#popup-text {
+    flex: 1; /* cho nội dung tự co lại và không bị nút X đè */
+}
+#popup-close {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    main {
+      margin: 16px;
+      padding: 16px;
+    }
+    .row, .row-datetime-location {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>📚 Trường PTDTBT THCS Thu Cúc</div>
+  <div class="actions">
+    <div id="teacher-display" style="display:none;"></div>
+    <button id="history-btn" style="display:none;">📜 Lịch sử</button>
+    <button id="logout-btn" style="display:none;">Đăng xuất</button>
+  </div>
+</header>
+
+<main>
+
+  <form id="login-form" onsubmit="event.preventDefault(); login();" novalidate>
+  <h2>Đăng Nhập Hệ Thống</h2>
+  
+  <input type="text" id="username" placeholder="Tên đăng nhập" autocomplete="username" required />
+  
+  <input type="password" id="password" placeholder="Mật khẩu" autocomplete="current-password" required />
+  
+  <div class="login-options">
+    <label><input type="checkbox" id="remember-me" /> Ghi nhớ đăng nhập</label>
+    <label><input type="checkbox" id="show-password" /> Hiển thị mật khẩu</label>
+  </div>
+  
+  <button type="submit">
+    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+  </button>
+  
+  <div class="login-footer">
+    Hệ thống quản lý tiết dạy - Trường PTDTBT THCS Thu Cúc
+  </div>
+  
+  <div id="login-error" aria-live="polite"></div>
+</form>
+
+  <form id="record-form" onsubmit="event.preventDefault(); submitForm();" style="display:none;" novalidate>
+    <h2>Ghi Sổ Tiết Dạy</h2>
+
+    <div class="row">
+      <div>
+        <label for="khoi">Chọn khối</label>
+        <select id="khoi" required>
+          <option value="">-- Chọn khối --</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sheet">Chọn lớp</label>
+        <select id="sheet" required>
+          <option value="">-- Chọn lớp --</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="lesson">Tiết</label>
+    <input type="text" id="lesson" placeholder="Nhập tiết" required />
+
+    <label for="title">Tên bài</label>
+    <input type="text" id="title" placeholder="Nhập tên bài" required />
+	
+<label for="comment">Nhận xét</label>
+<input type="text" id="comment" placeholder="Nhận xét của bạn" />
+
+<label for="rating">Đánh giá</label>
+<select id="rating" required>
+  <option value="">-- Chọn đánh giá --</option>
+  <option value="Tốt">Tốt</option>
+  <option value="Khá">Khá</option>
+  <option value="Đạt">Đạt</option>
+  <option value="Không đạt">Không đạt</option>
+</select>
+    <div class="row-datetime-location">
+      <div>
+        <label for="datetime-input">Ngày &amp; Giờ</label>
+        <input type="datetime-local" id="datetime-input" required />
+      </div>
+
+      <div>
+        <label>Vị trí</label>
+        <input type="text" id="location" readonly />
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Gửi</button>
+  </form>
+
+</main>
+
+<div id="history-popup" role="dialog" aria-modal="true" aria-labelledby="history-title" tabindex="-1">
+  <div class="history-panel" role="document">
+    <div class="history-head">
+      <h3 id="history-title">Lịch sử Ghi Sổ</h3>
+      <button class="close-history" id="close-history" title="Đóng">&times;</button>
+    </div>
+
+    <div class="history-filters">
+      <label for="history-date">Chọn ngày:</label>
+      <input type="date" id="history-date" />
+   <button id="history-search">
+  <i class="fas fa-search"></i>
+  <span class="search-text">Tìm kiếm</span>
+</button>
+    </div>
+
+    <div id="history-body">
+        <div id="history-record-display" class="view-mode">
+            </div>
+
+        <div id="history-navigation" style="display:none;">
+            <button id="history-prev-btn">&lt; Trước</button>
+            <span id="history-counter"></span>
+            <button id="history-next-btn">Sau &gt;</button>
+        </div>
+
+        <div id="history-actions" style="display:none;">
+            <div class="view-controls" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+                <button id="history-edit-btn" class="btn-edit">Sửa</button>
+                <button id="history-delete-btn" class="btn-delete">Xóa</button>
+            </div>
+             <div class="edit-controls" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+                <button id="history-update-btn" class="btn-update">Cập nhật</button>
+                <button id="history-cancel-btn" class="btn-cancel">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="loading-overlay" role="status" aria-live="polite" aria-label="Đang xử lý">
+  <div class="spinner"></div>
+</div>
+
+<div id="popup-message" role="alert" aria-live="assertive" style="display:none;">
+  <div class="popup-content">
+    <span id="popup-text"></span>
+    <button id="popup-close" aria-label="Đóng thông báo">&times;</button>
+  </div>
+</div>
+
+<script>
+// Thêm hiệu ứng khi nhấp vào input
+document.querySelectorAll('#login-form input').forEach(input => {
+  input.addEventListener('focus', function() {
+    this.parentNode.querySelector('label')?.classList.add('active');
+  });
+  
+  input.addEventListener('blur', function() {
+    if (!this.value) {
+      this.parentNode.querySelector('label')?.classList.remove('active');
+    }
+  });
+});
+
+// Hiển thị mật khẩu
+document.getElementById('show-password').addEventListener('change', function() {
+  const pwd = document.getElementById('password');
+  pwd.type = this.checked ? 'text' : 'password';
+});
+// Hàm hiển thị popup chào/tạm biệt
+
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzRXxmGjEd-52EvdsYt2WZJYulMFfzEaGT5xY0x1sGhyXJRFxbtCOdD_8bZDxG8VNJq1Q/exec"; 
+// => THAY bằng URL WebApp do bạn deploy (Apps Script)
+
+const lopTheoKhoi = {
+  "6": ["6A","6B","6C","6D","6E"],
+  "7": ["7A","7B","7C","7D","7E"],
+  "8": ["8A","8B","8C","8D","8E"],
+  "9": ["9A","9B","9C","9D"]
+};
+
+// State variables cho Lịch sử
+let historyRecords = [];
+let currentHistoryIndex = 0;
+
+const loginForm = document.getElementById("login-form");
+const recordForm = document.getElementById("record-form");
+const logoutBtn = document.getElementById("logout-btn");
+const historyBtn = document.getElementById("history-btn");
+const teacherDisplay = document.getElementById("teacher-display");
+
+const loadingOverlay = document.getElementById("loading-overlay");
+const popupMessage = document.getElementById("popup-message");
+const popupText = document.getElementById("popup-text");
+const popupCloseBtn = document.getElementById("popup-close");
+
+const khoiSelect = document.getElementById("khoi");
+const sheetSelect = document.getElementById("sheet");
+const datetimeInput = document.getElementById("datetime-input");
+const locationInput = document.getElementById("location");
+
+// Các element của Popup Lịch sử
+const historyPopup = document.getElementById("history-popup");
+const closeHistory = document.getElementById("close-history");
+const historySearchBtn = document.getElementById("history-search");
+const historyDateInput = document.getElementById("history-date");
+const historyBody = document.getElementById("history-body");
+const historyRecordDisplay = document.getElementById("history-record-display");
+const historyNavigation = document.getElementById("history-navigation");
+const historyCounter = document.getElementById("history-counter");
+const historyPrevBtn = document.getElementById("history-prev-btn");
+const historyNextBtn = document.getElementById("history-next-btn");
+const historyActions = document.getElementById("history-actions");
+
+const historyEditBtn = document.getElementById("history-edit-btn");
+const historyDeleteBtn = document.getElementById("history-delete-btn");
+const historyUpdateBtn = document.getElementById("history-update-btn");
+const historyCancelBtn = document.getElementById("history-cancel-btn");
+
+
+// Cập nhật lựa chọn lớp theo khối
+khoiSelect.addEventListener("change", () => {
+  const khoi = khoiSelect.value;
+  sheetSelect.innerHTML = '<option value="">-- Chọn lớp --</option>';
+  if (khoi && lopTheoKhoi[khoi]) {
+    lopTheoKhoi[khoi].forEach(lop => {
+      const option = document.createElement("option");
+      option.value = lop;
+      option.textContent = lop;
+      sheetSelect.appendChild(option);
+    });
+  }
+});
+
+// Cập nhật datetime và location
+function updateDatetimeLocation() {
+  const now = new Date();
+  // Định dạng giá trị cho datetime-local: yyyy-MM-ddThh:mm
+  function pad(n){return n<10?'0'+n:n;}
+  const yyyy = now.getFullYear();
+  const MM = pad(now.getMonth()+1);
+  const dd = pad(now.getDate());
+  const hh = pad(now.getHours());
+  const mm = pad(now.getMinutes());
+  datetimeInput.value = `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        locationInput.value = pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5);
+      },
+      () => {
+        locationInput.value = "Không lấy được vị trí";
+      },
+      {timeout:10000}
+    );
+  } else {
+    locationInput.value = "Trình duyệt không hỗ trợ GPS";
+  }
+}
+
+// Khởi động lúc tải trang
+window.addEventListener("DOMContentLoaded", () => {
+  const savedUsername = localStorage.getItem("savedUsername");
+  if (savedUsername) showRecordForm(savedUsername);
+  updateDatetimeLocation();
+});
+
+// Loading / Popup helpers
+function showLoading(){ loadingOverlay.style.display = "flex"; }
+function hideLoading(){ loadingOverlay.style.display = "none"; }
+function showPopup(msg, isError=false){
+  popupText.textContent = msg;
+  if(isError) {
+    popupMessage.classList.add('error');
+  } else {
+    popupMessage.classList.remove('error');
+  }
+  popupMessage.style.display = "block";
+  // Tự động ẩn nếu KHÔNG phải là lỗi
+  if(!isError) { 
+      clearTimeout(popupMessage.timeoutId);
+      popupMessage.timeoutId = setTimeout(() => { popupMessage.style.display = "none"; }, 4500);
+  } else {
+      // Nếu là lỗi, không tự động ẩn, chỉ cần đảm bảo popup đang hiển thị
+      clearTimeout(popupMessage.timeoutId); // Xóa timeout cũ nếu có
+  }
+}
+popupCloseBtn.addEventListener("click", () => { popupMessage.style.display = "none"; clearTimeout(popupMessage.timeoutId); });
+
+// Login
+function login(){
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const remember = document.getElementById("remember-me").checked;
+  document.getElementById("login-error").textContent = "";
+
+  if(!username || !password){
+    document.getElementById("login-error").textContent = "Vui lòng nhập đầy đủ";
+    return;
+  }
+
+  showLoading();
+  fetch(WEBAPP_URL, {
+    method:"POST",
+    body: JSON.stringify({ action:"login", username, password }),
+  })
+    .then(r => r.json())
+    .then(data => {
+      hideLoading();
+      if(data.success){
+        showRecordForm(data.teacher || username);
+        if(remember) localStorage.setItem("savedUsername", username);
+        else localStorage.removeItem("savedUsername");
+        
+        showGreeting('welcome', data.teacher || username);
+      } else {
+        document.getElementById("login-error").textContent = data.message || "Đăng nhập thất bại";
+      }
+    })
+    .catch(err => {
+      hideLoading();
+      document.getElementById("login-error").textContent = "Lỗi: "+err.message;
+    });
+}
+function showRecordForm(username){
+  loginForm.style.display = "none";
+  recordForm.style.display = "flex";
+  logoutBtn.style.display = "inline-block";
+  historyBtn.style.display = "inline-block";
+  
+  teacherDisplay.innerHTML = `<i class="fas fa-user-check"></i> ${escapeHtml(username)}`;
+  teacherDisplay.dataset.teacherName = username; 
+  teacherDisplay.style.display = "flex";
+
+  if (!document.getElementById("username").value) {
+    showGreeting('welcome', username);
+  }
+}
+
+function showLoginForm(){
+  loginForm.style.display = "block";
+  recordForm.style.display = "none";
+  logoutBtn.style.display = "none";
+  historyBtn.style.display = "none";
+  
+  teacherDisplay.style.display = "none";
+  teacherDisplay.innerHTML = "";
+  delete teacherDisplay.dataset.teacherName;
+
+  document.getElementById("username").value="";
+  document.getElementById("password").value="";
+  document.getElementById("remember-me").checked = false;
+}
+
+document.getElementById("show-password").addEventListener("change", function(){
+  const pwd = document.getElementById("password");
+  pwd.type = this.checked ? "text" : "password";
+});
+logoutBtn.addEventListener("click", ()=>{
+  const username = teacherDisplay.dataset.teacherName || '';
+  
+  showGreeting('goodbye', username);
+  
+  setTimeout(() => {
+    localStorage.removeItem("savedUsername");
+    showLoginForm();
+  }, 1000);
+});
+function showGreeting(type, username) {
+  const popup = document.getElementById('greeting-popup');
+  const text = document.getElementById('greeting-text');
+  const subtext = document.getElementById('greeting-subtext');
+  
+  const now = new Date();
+  const hour = now.getHours(); // Lấy giờ hiện tại
+  
+  if(type === 'welcome') {
+    let greeting, motivation;
+    
+    // Logic mới, dễ kiểm tra hơn
+    if (hour >= 5 && hour < 12) {
+      greeting = "Chào buổi sáng!";
+      motivation = "Chúc bạn một ngày mới tràn đầy năng lượng và hiệu quả. Bắt đầu ghi sổ thôi nào!";
+    } else if (hour >= 12 && hour < 18) {
+      greeting = "Chào buổi chiều!";
+      motivation = "Hy vọng bạn có một buổi chiều làm việc thật thành công. Tiếp tục ghi lại những tiết dạy tuyệt vời của bạn nhé!";
+    } else if (hour >= 18 && hour < 22) {
+      greeting = "Chào buổi tối!";
+      motivation = "Thật tuyệt vời vì bạn đã quay trở lại. Hãy ghi lại những tiết học cuối ngày để có một buổi tối thật thảnh thơi!";
+    } else { // từ 22h00 đến 04h59 sáng
+      greeting = "Chúc ngủ ngon!";
+      motivation = "Bạn làm việc muộn quá rồi đấy. Hãy ghi lại những gì cần thiết và nghỉ ngơi sớm nhé!";
+    }
+    
+    text.textContent = `Xin chào, ${username}!`;
+    subtext.textContent = motivation;
+  } else {
+    text.textContent = `Tạm biệt, ${username}!`;
+    subtext.textContent = "Hệ thống đã sẵn sàng cho lần đăng nhập tiếp theo của bạn. Hẹn gặp lại!";
+  }
+  
+  popup.style.display = 'block';
+  
+  setTimeout(() => {
+    popup.style.animation = 'fadeOut 0.9s ease-out';
+    setTimeout(() => {
+      popup.style.display = 'none';
+      popup.style.animation = 'fadeIn 0.9s ease-out';
+    }, 600);
+  }, 4000);
+}
+// Submit form ghi sổ
+function submitForm(){
+  const teacher = teacherDisplay.dataset.teacherName || '';
+  const lesson = document.getElementById("lesson").value.trim();
+  const title = document.getElementById("title").value.trim();
+  const comment = document.getElementById("comment").value.trim();
+  const rating = document.getElementById("rating").value;
+  const sheetName = document.getElementById("sheet").value;
+  const datetimeVal = datetimeInput.value;
+
+  if(!teacher){ showPopup("Lỗi phiên đăng nhập. Vui lòng đăng nhập lại.", true); return; }
+  if(!lesson){ showPopup("Vui lòng nhập Tiết", true); return; }
+  if(!title){ showPopup("Vui lòng nhập Tên bài", true); return; }
+  if(!rating){ showPopup("Vui lòng chọn Đánh giá", true); return; }
+  if(!sheetName){ showPopup("Vui lòng chọn Lớp", true); return; }
+  if(!datetimeVal){ showPopup("Vui lòng chọn Ngày & Giờ", true); return; }
+
+  const dt = new Date(datetimeVal);
+  if(isNaN(dt)) {
+    showPopup("Ngày & giờ không hợp lệ", true);
+    return;
+  }
+  function pad(n){return n<10?'0'+n:n;}
+  const dateStr = pad(dt.getDate()) + '/' + pad(dt.getMonth()+1) + '/' + dt.getFullYear();
+  const timeStr = pad(dt.getHours()) + ':' + pad(dt.getMinutes()) + ':00';
+
+  const data = {
+  action:"submit",
+  sheetName,
+  teacher,
+  lesson,
+  title,
+  comment,
+  rating,
+  datetime: dateStr + ' ' + timeStr,
+  location: locationInput.value
+};
+  showLoading();
+  fetch(WEBAPP_URL, { method:"POST", body: JSON.stringify(data) })
+    .then(r => r.json())
+    .then(res => {
+      hideLoading();
+      if(res.success){
+        showPopup(res.message || "Ghi thành công");
+        updateDatetimeLocation();
+      } else {
+        showPopup("Lỗi: "+(res.message||"Không rõ"), true);
+      }
+    })
+    .catch(err => {
+      hideLoading();
+      showPopup("Lỗi kết nối: "+err.message, true);
+    });
+}
+
+// ===============================================
+// ===== LOGIC MỚI CHO GIAO DIỆN LỊCH SỬ =====
+// ===============================================
+
+// Mở popup
+historyBtn.addEventListener("click", () => {
+  historyPopup.style.display = "flex";
+  historyDateInput.valueAsDate = new Date(); // Mặc định là ngày hôm nay
+  historyRecordDisplay.innerHTML = '<div style="text-align:center; color:#888;">Vui lòng chọn ngày và nhấn "Tìm kiếm".</div>';
+  historyNavigation.style.display = 'none';
+  historyActions.style.display = 'none';
+  historyPopup.focus();
+});
+
+// Đóng popup
+closeHistory.addEventListener("click", () => {
+  historyPopup.style.display = "none";
+});
+
+// Tìm kiếm
+historySearchBtn.addEventListener("click", () => {
+  const dateVal = historyDateInput.value;
+  if(!dateVal){ showPopup("Vui lòng chọn ngày để tìm", true); return; }
+  const parts = dateVal.split("-");
+  const ddmmy = parts[2] + "/" + parts[1] + "/" + parts[0];
+  const teacher = teacherDisplay.dataset.teacherName || '';
+  const payload = { action:"searchByDate", teacher, date: ddmmy, limit: 500 };
+  
+  showLoading();
+  fetch(WEBAPP_URL, { method:"POST", body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(res => {
+      hideLoading();
+      if(res.success){
+        historyRecords = res.records || [];
+        currentHistoryIndex = 0;
+        displayCurrentHistoryRecord();
+      } else {
+        showPopup("Lỗi: "+(res.message||"Không lấy được dữ liệu"), true);
+        historyRecords = [];
+        displayCurrentHistoryRecord();
+      }
+    })
+    .catch(err => {
+      hideLoading();
+      showPopup("Lỗi kết nối: "+err.message, true);
+      historyRecords = [];
+      displayCurrentHistoryRecord();
+    });
+});
+
+// Hiển thị bản ghi hiện tại
+function displayCurrentHistoryRecord(mode = 'view') {
+  if (historyRecords.length === 0) {
+    historyRecordDisplay.innerHTML = '<div style="text-align:center; color:#888;">Không có bản ghi nào cho ngày đã chọn.</div>';
+    historyNavigation.style.display = 'none';
+    historyActions.style.display = 'none';
+    return;
+  }
+
+  const record = historyRecords[currentHistoryIndex];
+  
+  let content = '';
+  if (mode === 'view') {
+     content = `
+        <div class="field-group"><label>Ngày & Giờ</label><div class="data">${escapeHtml(record.date)} ${escapeHtml(record.time || '')}</div></div>
+        <div class="field-group"><label>Tên giáo viên</label><div class="data">${escapeHtml(record.teacher)}</div></div>
+		<div class="field-group"><label>Lớp</label><div class="data">${escapeHtml(record.sheetName)}</div></div>
+        <div class="field-group"><label>Tiết</label><div class="data">${escapeHtml(record.lesson)}</div></div>
+        <div class="field-group"><label>Tên bài</label><div class="data">${escapeHtml(record.title)}</div></div>
+        <div class="field-group"><label>Nhận xét</label><div class="data">${escapeHtml(record.comment)}</div></div>
+        <div class="field-group"><label>Đánh giá</label><div class="data">${escapeHtml(record.rating)}</div></div>
+    `;
+    historyRecordDisplay.className = 'view-mode';
+  } else { // 'edit' mode
+     content = `
+        <div class="field-group"><label>Ngày & Giờ</label><div class="data">${escapeHtml(record.date)} ${escapeHtml(record.time || '')}</div></div>
+        <div class="field-group"><label>Tên giáo viên</label><div class="data">${escapeHtml(record.teacher)}</div></div>
+		 <div class="field-group"><label>Lớp</label><div class="data">${escapeHtml(record.sheetName)}</div></div>
+        <div class="field-group"><label>Tiết</label><input id="history-edit-lesson" type="text" value="${escapeAttr(record.lesson)}"></div>
+        <div class="field-group"><label>Tên bài</label><input id="history-edit-title" type="text" value="${escapeAttr(record.title)}"></div>
+        <div class="field-group"><label>Nhận xét</label><input id="history-edit-comment" type="text" value="${escapeAttr(record.comment)}"></div>
+        <div class="field-group"><label>Đánh giá</label>
+            <select id="history-edit-rating">
+                <option value="Tốt" ${record.rating === 'Tốt' ? 'selected' : ''}>Tốt</option>
+                <option value="Khá" ${record.rating === 'Khá' ? 'selected' : ''}>Khá</option>
+                <option value="Đạt" ${record.rating === 'Đạt' ? 'selected' : ''}>Đạt</option>
+                <option value="Không đạt" ${record.rating === 'Không đạt' ? 'selected' : ''}>Không đạt</option>
+            </select>
+        </div>
+    `;
+    historyRecordDisplay.className = 'edit-mode';
+  }
+  historyRecordDisplay.innerHTML = content;
+
+  // Cập nhật điều hướng
+  historyNavigation.style.display = 'flex';
+  historyActions.style.display = 'flex';
+  historyCounter.textContent = `Bản ghi ${currentHistoryIndex + 1} / ${historyRecords.length}`;
+  historyPrevBtn.disabled = (currentHistoryIndex === 0);
+  historyNextBtn.disabled = (currentHistoryIndex >= historyRecords.length - 1);
+}
+
+// Nút điều hướng
+historyPrevBtn.addEventListener("click", () => {
+    if(currentHistoryIndex > 0) {
+        currentHistoryIndex--;
+        displayCurrentHistoryRecord();
+    }
+});
+
+historyNextBtn.addEventListener("click", () => {
+    if(currentHistoryIndex < historyRecords.length - 1) {
+        currentHistoryIndex++;
+        displayCurrentHistoryRecord();
+    }
+});
+
+// Nút hành động
+historyEditBtn.addEventListener("click", () => {
+    displayCurrentHistoryRecord('edit');
+});
+
+historyCancelBtn.addEventListener("click", () => {
+    displayCurrentHistoryRecord('view');
+});
+
+historyDeleteBtn.addEventListener("click", () => {
+    if (!confirm("Bạn có chắc muốn xóa bản ghi này? Hành động này không thể hoàn tác.")) return;
+
+    const record = historyRecords[currentHistoryIndex];
+    const payload = { action:"deleteRecord", sheetName: record.sheetName, rowIndex: record.rowIndex, teacher: record.teacher };
+    
+    showLoading();
+    fetch(WEBAPP_URL, { method:"POST", body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if(res.success){
+            showPopup(res.message || "Xóa thành công");
+            historyRecords.splice(currentHistoryIndex, 1); // Xóa khỏi mảng local
+            if (currentHistoryIndex >= historyRecords.length && historyRecords.length > 0) {
+                currentHistoryIndex = historyRecords.length - 1; // Lùi lại nếu xóa item cuối
+            }
+            displayCurrentHistoryRecord(); // Hiển thị lại
+        } else {
+            showPopup("Lỗi: "+(res.message||"Xóa thất bại"), true);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        showPopup("Lỗi kết nối: "+err.message, true);
+    });
+});
+
+historyUpdateBtn.addEventListener("click", () => {
+    const record = historyRecords[currentHistoryIndex];
+    
+    const newLesson = document.getElementById('history-edit-lesson').value.trim();
+    const newTitle = document.getElementById('history-edit-title').value.trim();
+    const newComment = document.getElementById('history-edit-comment').value.trim();
+    const newRating = document.getElementById('history-edit-rating').value;
+
+    if(!newLesson || !newTitle) {
+        showPopup("Tiết và Tên bài không được để trống!", true);
+        return;
+    }
+
+    const payload = { 
+        action: "editRecord", 
+        sheetName: record.sheetName, 
+        rowIndex: record.rowIndex, 
+        teacher: record.teacher, 
+        lesson: newLesson, 
+        title: newTitle,
+        comment: newComment,
+        rating: newRating
+    };
+    
+    showLoading();
+    fetch(WEBAPP_URL, { method:"POST", body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(res => {
+        hideLoading();
+        if(res.success){
+            showPopup(res.message || "Cập nhật thành công");
+            // Cập nhật bản ghi trong mảng local
+            record.lesson = newLesson;
+            record.title = newTitle;
+            record.comment = newComment;
+            record.rating = newRating;
+            displayCurrentHistoryRecord('view'); // Chuyển về mode xem
+        } else {
+            showPopup("Lỗi: "+(res.message||"Cập nhật thất bại"), true);
+        }
+    })
+    .catch(err => {
+        hideLoading();
+        showPopup("Lỗi kết nối: "+err.message, true);
+    });
+});
+
+
+function escapeHtml(s) {
+  if(s === null || s === undefined) return '';
+  return s.toString()
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,"&#39;");
+}
+function escapeAttr(s) {
+  if(s === null || s === undefined) return '';
+  return s.toString()
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,"&#39;");
+}
+
+</script>
+
+
+<footer style="
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  padding: 20px 15px;
+  font-size: 14px;
+  color: #666;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  flex-wrap: wrap;
+">
+  <i class="fa-regular fa-copyright" style="color:#999; font-size:18px;"></i>
+  <span>
+    &copy; <span id="year"></span> Bản quyền thuộc về 
+    <strong style="display:inline-flex; align-items:center; gap:6px;">
+      Duy Hạnh 
+      <i class="fas fa-heart heart-glow" style="font-size:16px; color:#e25555;"></i>
+    </strong>.
+  </span>
+
+  <span style="font-weight:600; margin-right:6px;">Liên hệ:</span>
+  <a href="https://facebook.com/1994duyhanh" target="_blank" style="color:#1877F2; text-decoration:none; display:flex; align-items:center; gap:6px; font-weight:600;">
+      <i class="fab fa-facebook-f" style="font-size:18px;"></i> Facebook
+  </a>
+
+  <div style="display:flex; align-items:center; gap:6px; color:#333; font-weight:600;">
+    <i class="fas fa-phone-alt" style="font-size:18px; color:#4CAF50;"></i>
+    <span>0868 640 898</span>
+  </div>
+</footer>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  crossorigin="anonymous"
+/>
+
+<style>
+
+/* POPUP CHÀO/TẠM BIỆT RIÊNG */
+.greeting-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fdfdfd; /* Màu nền nhẹ nhàng */
+  background: linear-gradient(135deg, #f0fff0, #e6f7ff); /* Gradient đẹp mắt */
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Đổ bóng sâu hơn */
+  text-align: center;
+  z-index: 7000;
+  max-width: 90%;
+  min-width: 300px;
+  border: 2px solid #2ecc71; /* Viền nổi bật */
+  animation: fadeIn 0.8s ease-out; /* Animation mượt mà hơn */
+}
+
+.greeting-message {
+  font-size: 1.8rem; /* Kích thước lớn hơn */
+  color: #2c3e50; /* Màu chữ đậm */
+  margin-bottom: 12px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Text-shadow nhẹ */
+}
+
+.greeting-subtext {
+  font-size: 1rem;
+  color: #7f8c8d; /* Màu chữ phụ */
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -40%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+  /* Hiệu ứng glow nhẹ cho icon trái tim */
+  .heart-glow {
+    animation: glowHeart 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowHeart {
+    0% {
+      text-shadow:
+        0 0 5px #e25555,
+        0 0 10px #e25555,
+        0 0 15px #ff4b4b;
+      transform: scale(1);
+    }
+    100% {
+      text-shadow:
+        0 0 15px #ff4b4b,
+        0 0 25px #ff4b4b,
+        0 0 35px #ff6f6f;
+      transform: scale(1.1);
+    }
+  }
+</style>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+
+<div id="greeting-popup" class="greeting-popup" style="display:none;">
+  <div class="greeting-message" id="greeting-text"></div>
+  <div class="greeting-subtext" id="greeting-subtext"></div>
+</div>
+
+</body>
+</html>
