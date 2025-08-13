@@ -715,48 +715,6 @@ header .actions {
 </div>
 
 <script>
-
-
-let startY = 0;
-    const refreshThreshold = 80; // Khoảng cách kéo tối thiểu để làm mới (tính bằng pixel)
-
-    document.addEventListener('touchstart', (e) => {
-        // Chỉ kích hoạt khi kéo từ đầu trang
-        if (window.scrollY === 0) {
-            startY = e.touches[0].clientY;
-        }
-    });
-
-    document.addEventListener('touchmove', (e) => {
-        if (startY === 0) return;
-
-        const currentY = e.touches[0].clientY;
-        const pullDistance = currentY - startY;
-        
-        // Ngăn chặn cuộn trang nếu đang kéo xuống
-        if (pullDistance > 0 && window.scrollY === 0) {
-            e.preventDefault();
-        }
-    });
-
-    document.addEventListener('touchend', (e) => {
-        if (startY === 0) return;
-
-        const currentY = e.changedTouches[0].clientY;
-        const pullDistance = currentY - startY;
-
-        // Nếu kéo đủ khoảng cách, tải lại trang
-        if (window.scrollY === 0 && pullDistance > refreshThreshold) {
-            window.location.reload();
-        }
-        
-        startY = 0;
-    });
-
-
-
-
-	
 // Thêm hiệu ứng khi nhấp vào input
 document.querySelectorAll('#login-form input').forEach(input => {
   input.addEventListener('focus', function() {
@@ -1415,61 +1373,50 @@ function escapeAttr(s) {
   <div class="greeting-subtext" id="greeting-subtext"></div>
 </div>
 
+
+
+
 <script>
-    // ... Các đoạn code JavaScript khác của bạn (nếu có) ...
+    // ... các đoạn code JavaScript khác của bạn
 
-    // Hàm để lấy vị trí của người dùng
-    function getUserLocation() {
-        if (navigator.geolocation) {
-            // Yêu cầu trình duyệt lấy vị trí
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    // Thành công: Lấy được vị trí
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    console.log("Vĩ độ: " + latitude);
-                    console.log("Kinh độ: " + longitude);
-                    
-                    // Bạn có thể sử dụng latitude và longitude ở đây
-                    // Ví dụ: hiển thị lên một ô input hoặc gửi đi
-                },
-                function(error) {
-                    // Thất bại: Người dùng từ chối hoặc có lỗi
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            console.error("Người dùng đã từ chối yêu cầu vị trí.");
-                            alert("Bạn đã từ chối cấp quyền truy cập vị trí.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            console.error("Thông tin vị trí không khả dụng.");
-                            alert("Không thể lấy được vị trí hiện tại của bạn.");
-                            break;
-                        case error.TIMEOUT:
-                            console.error("Yêu cầu lấy vị trí đã hết thời gian.");
-                            alert("Yêu cầu lấy vị trí đã hết thời gian.");
-                            break;
-                        default:
-                            console.error("Một lỗi không xác định đã xảy ra.");
-                            alert("Đã xảy ra lỗi khi lấy vị trí.");
-                            break;
-                    }
-                }
-            );
-        } else {
-            // Trình duyệt không hỗ trợ Geolocation
-            alert("Trình duyệt của bạn không hỗ trợ lấy vị trí.");
+    let startY = 0;
+    const refreshThreshold = 80; // Khoảng cách kéo tối thiểu để làm mới (tính bằng pixel)
+
+    document.addEventListener('touchstart', (e) => {
+        // Chỉ kích hoạt khi kéo từ đầu trang
+        if (window.scrollY === 0) {
+            startY = e.touches[0].clientY;
         }
-    }
+    });
 
-    // Tự động gọi hàm getUserLocation() khi trang web được tải
-    window.onload = function() {
-        getUserLocation();
-    };
+    document.addEventListener('touchmove', (e) => {
+        if (startY === 0) return;
+
+        const currentY = e.touches[0].clientY;
+        const pullDistance = currentY - startY;
+        
+        // Ngăn chặn cuộn trang nếu đang kéo xuống
+        if (pullDistance > 0 && window.scrollY === 0) {
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener('touchend', (e) => {
+        if (startY === 0) return;
+
+        const currentY = e.changedTouches[0].clientY;
+        const pullDistance = currentY - startY;
+
+        // Nếu kéo đủ khoảng cách, tải lại trang
+        if (window.scrollY === 0 && pullDistance > refreshThreshold) {
+            window.location.reload();
+        }
+        
+        startY = 0;
+    });
 
 </script>
 
+
 </body>
-
 </html>
-
-
