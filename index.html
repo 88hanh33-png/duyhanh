@@ -599,7 +599,7 @@ header .actions {
   </button>
   
   <div class="login-footer">
-    Hệ thống quản lý tiết dạy <br> Trường PTDTBT THCS Thu Cúc
+    Hệ thống quản lý tiết dạy <br >Trường PTDTBT THCS Thu Cúc
   </div>
   
   <div id="login-error" aria-live="polite"></div>
@@ -1421,10 +1421,12 @@ function escapeAttr(s) {
     
     // Gọi hàm này khi cần lấy vị trí
     // Ví dụ: getUserLocation();
+	window.onload = function() {
+    getUserLocation();
+};
 </script>
 
 
 
 </body>
-
 </html>
