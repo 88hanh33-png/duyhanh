@@ -606,15 +606,81 @@ header .actions {
       flex-direction: column;
     }
   }
+
+/* ===============================================
+===== BỔ SUNG CHO GIAO DIỆN THỐNG KÊ =====
+=============================================== */
+#summary-popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5500;
+    padding: 16px;
+}
+.summary-panel {
+    background: white;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 500px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgb(0 0 0 / 0.25);
+}
+.summary-head {
+    padding: 18px 24px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.summary-head h3 {
+    margin: 0;
+    font-weight: 700;
+    color: #27ae60;
+}
+.close-summary {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.3s ease;
+}
+.close-summary:hover {
+    color: #e74c3c;
+}
+#summary-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
 </style>
 </head>
 <body>
+
+
 <div id="particles-js"></div>
 <header>
   <div>📚 Trường PTDTBT THCS Thu Cúc</div>
   <div class="actions">
     <div id="teacher-display" style="display:none;"></div>
     <button id="history-btn" style="display:none;">📜 Lịch sử</button>
+    <button id="summary-btn" style="display:none;">📊 Thống kê</button>
+	<div id="summary-section" style="display:none;">
+    <h2>Thống kê tiết dạy</h2>
+    <div id="summary-content">
+        </div>
+    <br>
+    <button onclick="fetchSummary(currentTeacher)">Xem Thống kê</button>
+    <button onclick="fetchSummary(currentTeacher, true)">Cập nhật Thống kê</button>
+</div>
+	
     <button id="logout-btn" style="display:none;">Đăng xuất</button>
   </div>
 </header>
@@ -742,6 +808,18 @@ header .actions {
   </div>
 </div>
 
+<div id="summary-popup" role="dialog" aria-modal="true" aria-labelledby="summary-title" tabindex="-1" style="display:none;">
+  <div class="summary-panel" role="document">
+    <div class="summary-head">
+      <h3 id="summary-title">Thống kê Tiết Dạy</h3>
+      <button class="close-summary" id="close-summary" title="Đóng">&times;</button>
+    </div>
+    <div id="summary-body">
+      </div>
+  </div>
+</div>
+
+
 <div id="loading-overlay" role="status" aria-live="polite" aria-label="Đang xử lý">
   <div class="spinner"></div>
 </div>
@@ -754,6 +832,15 @@ header .actions {
 </div>
 
 <script>
+
+
+
+
+
+
+
+
+
 // Thêm hiệu ứng khi nhấp vào input
 document.querySelectorAll('#login-form input').forEach(input => {
   input.addEventListener('focus', function() {
@@ -774,7 +861,7 @@ document.getElementById('show-password').addEventListener('change', function() {
 });
 // Hàm hiển thị popup chào/tạm biệt
 
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzRXxmGjEd-52EvdsYt2WZJYulMFfzEaGT5xY0x1sGhyXJRFxbtCOdD_8bZDxG8VNJq1Q/exec"; 
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx1p_MepFprBZdLo2sYStUgDp_EPdPkZflGgVP_-14Jrm_mri2g1AkyLAbJ531Y26lf/exec"; 
 // => THAY bằng URL WebApp do bạn deploy (Apps Script)
 
 const lopTheoKhoi = {
@@ -792,6 +879,7 @@ const loginForm = document.getElementById("login-form");
 const recordForm = document.getElementById("record-form");
 const logoutBtn = document.getElementById("logout-btn");
 const historyBtn = document.getElementById("history-btn");
+const summaryBtn = document.getElementById("summary-btn");
 const teacherDisplay = document.getElementById("teacher-display");
 
 const loadingOverlay = document.getElementById("loading-overlay");
@@ -815,12 +903,17 @@ const historyNavigation = document.getElementById("history-navigation");
 const historyCounter = document.getElementById("history-counter");
 const historyPrevBtn = document.getElementById("history-prev-btn");
 const historyNextBtn = document.getElementById("history-next-btn");
-const historyActions = document.getElementById("history-actions");
+const historyActions = document = document.getElementById("history-actions");
 
 const historyEditBtn = document.getElementById("history-edit-btn");
 const historyDeleteBtn = document.getElementById("history-delete-btn");
 const historyUpdateBtn = document.getElementById("history-update-btn");
 const historyCancelBtn = document.getElementById("history-cancel-btn");
+
+// Các element của Popup Thống kê
+const summaryPopup = document.getElementById("summary-popup");
+const closeSummary = document.getElementById("close-summary");
+const summaryBody = document.getElementById("summary-body");
 
 
 // Cập nhật lựa chọn lớp theo khối
@@ -933,10 +1026,12 @@ function showRecordForm(username){
   recordForm.style.display = "flex";
   logoutBtn.style.display = "inline-block";
   historyBtn.style.display = "inline-block";
+  summaryBtn.style.display = "inline-block";
   
   teacherDisplay.innerHTML = `<i class="fas fa-user-check"></i> ${escapeHtml(username)}`;
   teacherDisplay.dataset.teacherName = username; 
   teacherDisplay.style.display = "flex";
+  teacherDisplay.style.cursor = "pointer";
 
   if (!document.getElementById("username").value) {
     showGreeting('welcome', username);
@@ -948,10 +1043,12 @@ function showLoginForm(){
   recordForm.style.display = "none";
   logoutBtn.style.display = "none";
   historyBtn.style.display = "none";
+  summaryBtn.style.display = "none";
   
   teacherDisplay.style.display = "none";
   teacherDisplay.innerHTML = "";
   delete teacherDisplay.dataset.teacherName;
+  teacherDisplay.style.cursor = "default";
 
   document.getElementById("username").value="";
   document.getElementById("password").value="";
@@ -1289,6 +1386,147 @@ function escapeAttr(s) {
     .replace(/'/g,"&#39;");
 }
 
+
+// ===============================================
+// ===== LOGIC CHO GIAO DIỆN THỐNG KÊ MỚI =====
+// ===============================================
+
+// Xử lý sự kiện khi click vào nút "Thống kê"
+summaryBtn.addEventListener("click", () => {
+  summaryPopup.style.display = "flex";
+  fetchSummary();
+});
+
+// Xử lý sự kiện khi click vào tên giáo viên trên header
+teacherDisplay.addEventListener("click", () => {
+    // Chỉ thực hiện khi tên giáo viên đang hiển thị
+    if (teacherDisplay.style.display !== "none") {
+        summaryPopup.style.display = "flex";
+        fetchSummary();
+    }
+});
+
+// Xử lý sự kiện khi click vào nút đóng popup thống kê
+closeSummary.addEventListener("click", () => {
+  summaryPopup.style.display = "none";
+});
+
+// Hàm lấy dữ liệu thống kê từ Apps Script
+function fetchSummary() {
+  const teacher = teacherDisplay.dataset.teacherName || '';
+  if (!teacher) {
+    showPopup("Lỗi: Không tìm thấy tên giáo viên.", true);
+    return;
+  }
+  showLoading();
+  fetch(WEBAPP_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "getSummary", teacher: teacher }),
+  })
+  .then(res => res.json())
+  .then(data => {
+    hideLoading();
+    if (data.success) {
+      displaySummary(data.summary);
+    } else {
+      showPopup("Lỗi thống kê: " + data.message, true);
+    }
+  })
+  .catch(err => {
+    hideLoading();
+    showPopup("Lỗi kết nối: " + err.message, true);
+  });
+}
+
+function displaySummary(summaryData) {
+  const summaryBody = document.getElementById("summary-body");
+  
+  // Tạo bảng thống kê với CSS nội tuyến để đảm bảo kiểu dáng
+  let htmlContent = `
+    <style>
+      .summary-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 15px;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+      .summary-table th, .summary-table td {
+          padding: 12px 15px;
+          text-align: left;
+          border-bottom: 1px solid #e0e0e0;
+      }
+      .summary-table thead th {
+          background-color: #3498db;
+          color: white;
+          font-weight: 600;
+          text-transform: uppercase;
+      }
+      .summary-table tbody tr:last-child td {
+          border-bottom: none;
+      }
+      .summary-table tbody tr:nth-child(odd) {
+          background-color: #f9f9f9;
+      }
+      .summary-table tbody tr:hover {
+          background-color: #f1f1f1;
+          cursor: pointer;
+      }
+      .summary-total {
+          font-weight: 700;
+          background-color: #2c3e50;
+          color: white;
+      }
+      .summary-info {
+        font-size: 1.1em;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #555;
+        text-align: center;
+      }
+    </style>
+
+  <div class="summary-info-card">
+    <div class="summary-info">Tổng số tiết đã ghi: <strong>${summaryData.totalSessions}</strong></div>
+</div>
+
+<div class="summary-table-container">
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Đánh giá</th>
+        <th>Số lượng tiết</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tốt</td>
+        <td>${summaryData.ratings['Tốt'] || 0}</td>
+      </tr>
+      <tr>
+        <td>Khá</td>
+        <td>${summaryData.ratings['Khá'] || 0}</td>
+      </tr>
+      <tr>
+        <td>Đạt</td>
+        <td>${summaryData.ratings['Đạt'] || 0}</td>
+      </tr>
+      <tr>
+        <td>Không đạt</td>
+        <td>${summaryData.ratings['Không đạt'] || 0}</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+    
+  `;
+  
+  summaryBody.innerHTML = htmlContent;
+}
+
 </script>
 
 
@@ -1335,6 +1573,102 @@ function escapeAttr(s) {
 
 <style>
 
+/* Container chính cho phần thống kê */
+.summary-table-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+/* Bảng thống kê */
+.summary-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 1rem;
+    color: #333;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Tiêu đề bảng */
+.summary-table thead th {
+    background-color: #27ae60;
+    color: white;
+    font-weight: 700;
+    padding: 12px 15px;
+    text-align: center; /* Căn giữa tiêu đề */
+    text-transform: uppercase;
+}
+.summary-table thead tr th:first-child {
+    border-top-left-radius: 10px;
+}
+.summary-table thead tr th:last-child {
+    border-top-right-radius: 10px;
+}
+
+/* Nội dung bảng */
+.summary-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease;
+    text-align: center; /* Căn giữa dữ liệu */
+}
+
+/* Các dòng chẵn/lẻ */
+.summary-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+.summary-table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+/* Hiệu ứng khi di chuột qua */
+.summary-table tbody tr:hover {
+    background-color: #e8f6f3;
+}
+
+/* Các ô cuối bảng */
+.summary-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.summary-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+.summary-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+/* Dòng tổng cộng */
+.summary-total-row {
+    font-weight: 900;
+    background-color: #ecf0f1 !important;
+    border-top: 2px solid #ccc;
+    font-size: 1.1rem;
+}
+.summary-total-row td {
+    border-bottom: none;
+}
+
+/* Thẻ thông tin tổng quan */
+.summary-info-card {
+    background-color: #e8f6f3;
+    border: 1px solid #d4e8e1;
+    border-radius: 0px;
+    padding: 5px 5px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e8449;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.summary-info-card strong {
+    color: #27ae60;
+    font-size: 1.2rem;
+}
 
 
 /* Giao diện Popup chung */
@@ -1347,51 +1681,18 @@ function escapeAttr(s) {
     width: 90%;
     max-width: 500px;
     padding: 30px;
-    background: linear-gradient(145deg, #ffffff, #e0f7e9);
+    background: #fff;
     border-radius: 20px;
     border: 3px solid #2ecc71;
     text-align: center;
-    box-shadow: 
-        0 10px 40px rgba(0, 0, 0, 0.2),
-        0 0 20px rgba(46, 204, 113, 0.7),
-        0 0 40px rgba(46, 204, 113, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 
+                0 0 20px rgba(46, 204, 113, 0.5);
     animation: fadeInScale 0.6s ease-out forwards,
-               borderGlow 3s infinite alternate;
+               borderGlow 2s infinite alternate;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: visible;
-    cursor: default;
-    transition: transform 0.3s ease;
-}
-
-/* Hover nhẹ popup */
-.greeting-popup:hover {
-    transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
-    box-shadow: 
-        0 15px 50px rgba(0, 0, 0, 0.25),
-        0 0 35px rgba(46, 204, 113, 0.9),
-        0 0 60px rgba(46, 204, 113, 0.6);
-}
-
-/* Sparkle hiệu ứng - các chấm sáng nhỏ */
-.greeting-popup::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    width: calc(100% + 30px);
-    height: calc(100% + 30px);
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 10% 20%, rgba(46, 204, 113, 0.7) 2px, transparent 3px),
-      radial-gradient(circle at 80% 30%, rgba(46, 204, 113, 0.6) 2px, transparent 3px),
-      radial-gradient(circle at 50% 80%, rgba(46, 204, 113, 0.8) 3px, transparent 4px),
-      radial-gradient(circle at 70% 60%, rgba(46, 204, 113, 0.5) 2px, transparent 3px);
-    animation: sparkleMove 4s linear infinite;
-    border-radius: 25px;
-    z-index: -1;
 }
 
 /* Tiêu đề lời chào */
@@ -1402,7 +1703,7 @@ function escapeAttr(s) {
     color: #34495e;
     margin-bottom: 10px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
+    white-space: nowrap; /* Giúp cụm từ nằm trên một dòng duy nhất */
 }
 
 /* Dòng phụ bên dưới */
@@ -1412,70 +1713,7 @@ function escapeAttr(s) {
     color: #7f8c8d;
     font-weight: 500;
     line-height: 1.6;
-    margin-top: 5px;
-    max-width: 90%;
-    word-wrap: break-word;
 }
-
-/* Animation keyframes */
-@keyframes fadeInScale {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-    }
-    100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-@keyframes borderGlow {
-    0% {
-        box-shadow:
-            0 0 10px #2ecc71,
-            0 0 20px #27ae60;
-    }
-    50% {
-        box-shadow:
-            0 0 30px #2ecc71,
-            0 0 40px #27ae60;
-    }
-    100% {
-        box-shadow:
-            0 0 10px #2ecc71,
-            0 0 20px #27ae60;
-    }
-}
-
-/* Hiệu ứng sparkle dịch chuyển nhẹ */
-@keyframes sparkleMove {
-    0% {
-        background-position:
-            10% 20%,
-            80% 30%,
-            50% 80%,
-            70% 60%;
-    }
-    50% {
-        background-position:
-            15% 25%,
-            75% 35%,
-            55% 75%,
-            65% 65%;
-    }
-    100% {
-        background-position:
-            10% 20%,
-            80% 30%,
-            50% 80%,
-            70% 60%;
-    }
-}
-
-
-
-
-
 
 /* Keyframes cho hiệu ứng xuất hiện */
 @keyframes fadeInScale {
@@ -1638,7 +1876,5 @@ function escapeAttr(s) {
     });
 
 </script>
-
-
 </body>
 </html>
