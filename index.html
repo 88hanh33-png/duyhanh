@@ -1403,14 +1403,7 @@ summaryBtn.addEventListener("click", () => {
   fetchSummary();
 });
 
-// Xử lý sự kiện khi click vào tên giáo viên trên header
-teacherDisplay.addEventListener("click", () => {
-    // Chỉ thực hiện khi tên giáo viên đang hiển thị
-    if (teacherDisplay.style.display !== "none") {
-        summaryPopup.style.display = "flex";
-        fetchSummary();
-    }
-});
+
 
 // Xử lý sự kiện khi click vào nút đóng popup thống kê
 closeSummary.addEventListener("click", () => {
@@ -1885,4 +1878,5 @@ function displaySummary(summaryData) {
 </body>
 
 </html>
+
 
