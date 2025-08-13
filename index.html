@@ -1377,7 +1377,7 @@ function escapeAttr(s) {
 
 
 <script>
-    // ... các đoạn code JavaScript khác của bạn
+
 
     let startY = 0;
     const refreshThreshold = 80; // Khoảng cách kéo tối thiểu để làm mới (tính bằng pixel)
@@ -1414,64 +1414,9 @@ function escapeAttr(s) {
         
         startY = 0;
     });
-let startY = 0;
-    const refreshThreshold = 80;
 
-    document.addEventListener('touchstart', (e) => {
-        if (window.scrollY === 0) {
-            startY = e.touches[0].clientY;
-        }
-    });
-
-    document.addEventListener('touchmove', (e) => {
-        if (startY === 0) return;
-        const currentY = e.touches[0].clientY;
-        const pullDistance = currentY - startY;
-        if (pullDistance > 0 && window.scrollY === 0) {
-            e.preventDefault();
-        }
-    });
-
-    document.addEventListener('touchend', (e) => {
-        if (startY === 0) return;
-        const currentY = e.changedTouches[0].clientY;
-        const pullDistance = currentY - startY;
-        if (window.scrollY === 0 && pullDistance > refreshThreshold) {
-            window.location.reload();
-        }
-        startY = 0;
-    });
-
-    // ==========================================================
-    // Mã xử lý quyền TRUY CẬP VỊ TRÍ (Geolocation)
-    // ==========================================================
-    function getUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    console.log("Vĩ độ: " + latitude);
-                    console.log("Kinh độ: " + longitude);
-                    alert("Đã lấy được vị trí của bạn.");
-                },
-                function(error) {
-                    console.error("Lỗi khi lấy vị trí:", error.code);
-                    alert("Đã xảy ra lỗi khi lấy vị trí hoặc bạn đã từ chối cấp quyền.");
-                }
-            );
-        } else {
-            alert("Trình duyệt của bạn không hỗ trợ lấy vị trí.");
-        }
-    }
-
-    // Tự động gọi hàm lấy vị trí khi trang web được tải
-    window.onload = function() {
-        getUserLocation();
-    };
 </script>
 
 
 </body>
 </html>
-
