@@ -47,7 +47,6 @@
   font-size: 1rem;
   transition: all 0.3s;
   margin-bottom: 15px;
-  width: 100%; /* Cập nhật */
 }
 
 #login-form input[type="text"]:focus,
@@ -137,8 +136,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Thêm để header có thể xuống dòng */
-    gap: 10px; /* Thêm khoảng cách giữa các item */
   }
   header .actions button {
     background: #1e8449;
@@ -336,27 +333,19 @@ header .actions {
     padding: 12px 24px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     border-bottom: 1px solid #ddd;
     font-weight: 600;
     font-size: 0.9rem;
-    flex-wrap: nowrap; /* Tắt tính năng xuống dòng để giữ trên một hàng */
-    overflow-x: auto;
 }
-
 .history-filters label {
-    flex-shrink: 0;
-    white-space: nowrap;
+    font-weight: 600;
 }
-
 #history-date {
-    flex-grow: 1;
-    padding: 8px 12px;
-    font-size: 0.95rem;
+    padding: 6px 10px;
+    font-size: 1rem;
 }
-
 #history-search {
-    flex-shrink: 0;
     padding: 8px 18px;
     border: none;
     background: #27ae60;
@@ -364,27 +353,7 @@ header .actions {
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
-    display: flex; /* Bật flexbox cho nút */
-    align-items: center;
-    gap: 8px; /* Khoảng cách giữa icon và chữ */
     transition: background-color 0.3s ease;
-}
-#history-search:hover {
-    background: #1e8449;
-}
-
-/* Ẩn chữ "Tìm kiếm" trên màn hình nhỏ */
-@media (max-width: 480px) {
-  #history-search .search-text {
-    display: none;
-  }
-  #history-search {
-    padding: 10px; /* Điều chỉnh padding cho nút chỉ có icon */
-  }
-  #history-search .fas {
-    font-size: 1.1rem; /* Tăng kích thước icon */
-  }
-}
 }
 #history-search:hover {
     background: #1e8449;
@@ -462,7 +431,6 @@ header .actions {
     margin-top: 15px;
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
 }
 #history-actions button {
     flex: 1;
@@ -521,9 +489,9 @@ header .actions {
   #popup-message {
     display: none;
     position: fixed;
-    top: 50%;
+    top: 20px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     background: #27ae60;
     color: white;
     padding: 14px 26px;
@@ -672,10 +640,7 @@ header .actions {
     <div class="history-filters">
       <label for="history-date">Chọn ngày:</label>
       <input type="date" id="history-date" />
-   <button id="history-search">
-  <i class="fas fa-search"></i>
-  <span class="search-text">Tìm kiếm</span>
-</button>
+      <button id="history-search">Tìm kiếm</button>
     </div>
 
     <div id="history-body">
@@ -689,11 +654,11 @@ header .actions {
         </div>
 
         <div id="history-actions" style="display:none;">
-            <div class="view-controls" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+            <div class="view-controls" style="display: flex; gap: 10px; width: 100%;">
                 <button id="history-edit-btn" class="btn-edit">Sửa</button>
                 <button id="history-delete-btn" class="btn-delete">Xóa</button>
             </div>
-             <div class="edit-controls" style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+             <div class="edit-controls" style="display: flex; gap: 10px; width: 100%;">
                 <button id="history-update-btn" class="btn-update">Cập nhật</button>
                 <button id="history-cancel-btn" class="btn-cancel">Hủy</button>
             </div>
@@ -843,14 +808,8 @@ function showPopup(msg, isError=false){
     popupMessage.classList.remove('error');
   }
   popupMessage.style.display = "block";
-  // Tự động ẩn nếu KHÔNG phải là lỗi
-  if(!isError) { 
-      clearTimeout(popupMessage.timeoutId);
-      popupMessage.timeoutId = setTimeout(() => { popupMessage.style.display = "none"; }, 4500);
-  } else {
-      // Nếu là lỗi, không tự động ẩn, chỉ cần đảm bảo popup đang hiển thị
-      clearTimeout(popupMessage.timeoutId); // Xóa timeout cũ nếu có
-  }
+  clearTimeout(popupMessage.timeoutId);
+  popupMessage.timeoutId = setTimeout(() => { popupMessage.style.display = "none"; }, 4500);
 }
 popupCloseBtn.addEventListener("click", () => { popupMessage.style.display = "none"; clearTimeout(popupMessage.timeoutId); });
 
@@ -939,42 +898,30 @@ function showGreeting(type, username) {
   const subtext = document.getElementById('greeting-subtext');
   
   const now = new Date();
-  const hour = now.getHours(); // Lấy giờ hiện tại
+  const hour = now.getHours();
   
   if(type === 'welcome') {
-    let greeting, motivation;
+    let greeting;
+    if (hour < 12) greeting = "Chào buổi sáng";
+    else if (hour < 18) greeting = "Chào buổi chiều";
+    else greeting = "Chào buổi tối";
     
-    // Logic mới, dễ kiểm tra hơn
-    if (hour >= 5 && hour < 12) {
-      greeting = "Chào buổi sáng!";
-      motivation = "Chúc bạn một ngày mới tràn đầy năng lượng và hiệu quả. Bắt đầu ghi sổ thôi nào!";
-    } else if (hour >= 12 && hour < 18) {
-      greeting = "Chào buổi chiều!";
-      motivation = "Hy vọng bạn có một buổi chiều làm việc thật thành công. Tiếp tục ghi lại những tiết dạy tuyệt vời của bạn nhé!";
-    } else if (hour >= 18 && hour < 22) {
-      greeting = "Chào buổi tối!";
-      motivation = "Thật tuyệt vời vì bạn đã quay trở lại. Hãy ghi lại những tiết học cuối ngày để có một buổi tối thật thảnh thơi!";
-    } else { // từ 22h00 đến 04h59 sáng
-      greeting = "Chúc ngủ ngon!";
-      motivation = "Bạn làm việc muộn quá rồi đấy. Hãy ghi lại những gì cần thiết và nghỉ ngơi sớm nhé!";
-    }
-    
-    text.textContent = `Xin chào, ${username}!`;
-    subtext.textContent = motivation;
+    text.textContent = `${greeting}, ${username}!`;
+    subtext.textContent = "Chúc bạn một ngày làm việc hiệu quả";
   } else {
-    text.textContent = `Tạm biệt, ${username}!`;
-    subtext.textContent = "Hệ thống đã sẵn sàng cho lần đăng nhập tiếp theo của bạn. Hẹn gặp lại!";
+    text.textContent = `Tạm biệt ${username}!`;
+    subtext.textContent = "Hẹn gặp lại bạn lần sau";
   }
   
   popup.style.display = 'block';
   
   setTimeout(() => {
-    popup.style.animation = 'fadeOut 0.9s ease-out';
+    popup.style.animation = 'fadeOut 0.6s ease-out';
     setTimeout(() => {
       popup.style.display = 'none';
-      popup.style.animation = 'fadeIn 0.9s ease-out';
+      popup.style.animation = 'fadeIn 0.6s ease-out';
     }, 600);
-  }, 4000);
+  }, 3000);
 }
 // Submit form ghi sổ
 function submitForm(){
@@ -1277,7 +1224,7 @@ function escapeAttr(s) {
     </strong>.
   </span>
 
-  <span style="font-weight:600; margin-right:6px;">Liên hệ:</span>
+  
   <a href="https://facebook.com/1994duyhanh" target="_blank" style="color:#1877F2; text-decoration:none; display:flex; align-items:center; gap:6px; font-weight:600;">
       <i class="fab fa-facebook-f" style="font-size:18px;"></i> Facebook
   </a>
@@ -1302,32 +1249,27 @@ function escapeAttr(s) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fdfdfd; /* Màu nền nhẹ nhàng */
-  background: linear-gradient(135deg, #f0fff0, #e6f7ff); /* Gradient đẹp mắt */
-  padding: 40px 50px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Đổ bóng sâu hơn */
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   text-align: center;
   z-index: 7000;
-  max-width: 90%;
-  min-width: 300px;
-  border: 2px solid #2ecc71; /* Viền nổi bật */
-  animation: fadeIn 0.8s ease-out; /* Animation mượt mà hơn */
+  max-width: 80%;
+  animation: fadeIn 0.6s ease-out;
+  border: 1px solid #27ae60;
 }
 
 .greeting-message {
-  font-size: 1.8rem; /* Kích thước lớn hơn */
-  color: #2c3e50; /* Màu chữ đậm */
-  margin-bottom: 12px;
-  font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Text-shadow nhẹ */
+  font-size: 1.4rem;
+  color: #27ae60;
+  margin-bottom: 15px;
+  font-weight: 600;
 }
 
 .greeting-subtext {
   font-size: 1rem;
-  color: #7f8c8d; /* Màu chữ phụ */
-  font-weight: 500;
-  line-height: 1.5;
+  color: #555;
 }
 
 @keyframes fadeIn {
