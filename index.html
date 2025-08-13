@@ -599,7 +599,7 @@ header .actions {
   </button>
   
   <div class="login-footer">
-    Hệ thống quản lý tiết dạy <br>Trường PTDTBT THCS Thu Cúc
+    Hệ thống quản lý tiết dạy - Trường PTDTBT THCS Thu Cúc
   </div>
   
   <div id="login-error" aria-live="polite"></div>
@@ -1249,55 +1249,7 @@ function escapeAttr(s) {
     .replace(/"/g,'&quot;')
     .replace(/'/g,"&#39;");
 }
-<script>
-    // ... các đoạn script hiện có của bạn
 
-    // Hàm mới để lấy vị trí
-    function getUserLocation() {
-        if (navigator.geolocation) {
-            // Yêu cầu trình duyệt lấy vị trí
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    // Thành công: Lấy được vị trí
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    console.log("Vĩ độ: " + latitude);
-                    console.log("Kinh độ: " + longitude);
-                    
-                    // Bạn có thể sử dụng latitude và longitude ở đây
-                    // Ví dụ: hiển thị lên một ô input hoặc gửi đi
-                },
-                function(error) {
-                    // Thất bại: Người dùng từ chối hoặc có lỗi
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            console.error("Người dùng đã từ chối yêu cầu vị trí.");
-                            alert("Bạn đã từ chối cấp quyền truy cập vị trí.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            console.error("Thông tin vị trí không khả dụng.");
-                            alert("Không thể lấy được vị trí hiện tại của bạn.");
-                            break;
-                        case error.TIMEOUT:
-                            console.error("Yêu cầu lấy vị trí đã hết thời gian.");
-                            alert("Yêu cầu lấy vị trí đã hết thời gian.");
-                            break;
-                        default:
-                            console.error("Một lỗi không xác định đã xảy ra.");
-                            alert("Đã xảy ra lỗi khi lấy vị trí.");
-                            break;
-                    }
-                }
-            );
-        } else {
-            // Trình duyệt không hỗ trợ Geolocation
-            alert("Trình duyệt của bạn không hỗ trợ lấy vị trí.");
-        }
-    }
-    
-    // Gọi hàm này khi cần lấy vị trí
-    // Ví dụ: getUserLocation();
-</script>
 </script>
 
 
@@ -1420,6 +1372,58 @@ function escapeAttr(s) {
   <div class="greeting-message" id="greeting-text"></div>
   <div class="greeting-subtext" id="greeting-subtext"></div>
 </div>
+
+<script>
+    // ... các đoạn script hiện có của bạn
+
+    // Hàm mới để lấy vị trí
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            // Yêu cầu trình duyệt lấy vị trí
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    // Thành công: Lấy được vị trí
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    console.log("Vĩ độ: " + latitude);
+                    console.log("Kinh độ: " + longitude);
+                    
+                    // Bạn có thể sử dụng latitude và longitude ở đây
+                    // Ví dụ: hiển thị lên một ô input hoặc gửi đi
+                },
+                function(error) {
+                    // Thất bại: Người dùng từ chối hoặc có lỗi
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            console.error("Người dùng đã từ chối yêu cầu vị trí.");
+                            alert("Bạn đã từ chối cấp quyền truy cập vị trí.");
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            console.error("Thông tin vị trí không khả dụng.");
+                            alert("Không thể lấy được vị trí hiện tại của bạn.");
+                            break;
+                        case error.TIMEOUT:
+                            console.error("Yêu cầu lấy vị trí đã hết thời gian.");
+                            alert("Yêu cầu lấy vị trí đã hết thời gian.");
+                            break;
+                        default:
+                            console.error("Một lỗi không xác định đã xảy ra.");
+                            alert("Đã xảy ra lỗi khi lấy vị trí.");
+                            break;
+                    }
+                }
+            );
+        } else {
+            // Trình duyệt không hỗ trợ Geolocation
+            alert("Trình duyệt của bạn không hỗ trợ lấy vị trí.");
+        }
+    }
+    
+    // Gọi hàm này khi cần lấy vị trí
+    // Ví dụ: getUserLocation();
+</script>
+
+
 
 </body>
 </html>
