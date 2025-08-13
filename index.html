@@ -6,6 +6,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 
+
+
+/* CSS cho hiệu ứng hạt sáng */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #f0f2f5;
+    background-image: linear-gradient(135deg, #f0f2f5 0%, #a1c4fd 100%);
+    z-index: -1; /* Đảm bảo hiệu ứng nằm dưới tất cả các nội dung khác */
+    top: 0;
+    left: 0;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #fff;
+    opacity: 0;
+    animation: move-particle 15s infinite ease-in-out;
+}
+
+@keyframes move-particle {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateY(-200px) scale(1.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-400px) scale(0.8);
+        opacity: 0;
+    }
+}
+
+
+
 /* ========== FORM LOGIN MỚI ========== */
 #login-form {
   background: white;
@@ -570,7 +609,7 @@ header .actions {
 </style>
 </head>
 <body>
-
+<div id="particles-js"></div>
 <header>
   <div>📚 Trường PTDTBT THCS Thu Cúc</div>
   <div class="actions">
@@ -1296,39 +1335,192 @@ function escapeAttr(s) {
 
 <style>
 
-/* POPUP CHÀO/TẠM BIỆT RIÊNG */
+
+
+/* Giao diện Popup chung */
 .greeting-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fdfdfd; /* Màu nền nhẹ nhàng */
-  background: linear-gradient(135deg, #f0fff0, #e6f7ff); /* Gradient đẹp mắt */
-  padding: 40px 50px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Đổ bóng sâu hơn */
-  text-align: center;
-  z-index: 7000;
-  max-width: 90%;
-  min-width: 300px;
-  border: 2px solid #2ecc71; /* Viền nổi bật */
-  animation: fadeIn 0.8s ease-out; /* Animation mượt mà hơn */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+    background: linear-gradient(145deg, #ffffff, #e0f7e9);
+    border-radius: 20px;
+    border: 3px solid #2ecc71;
+    text-align: center;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(46, 204, 113, 0.7),
+        0 0 40px rgba(46, 204, 113, 0.4);
+    animation: fadeInScale 0.6s ease-out forwards,
+               borderGlow 3s infinite alternate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    cursor: default;
+    transition: transform 0.3s ease;
 }
 
+/* Hover nhẹ popup */
+.greeting-popup:hover {
+    transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
+    box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.25),
+        0 0 35px rgba(46, 204, 113, 0.9),
+        0 0 60px rgba(46, 204, 113, 0.6);
+}
+
+/* Sparkle hiệu ứng - các chấm sáng nhỏ */
+.greeting-popup::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: calc(100% + 30px);
+    height: calc(100% + 30px);
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(46, 204, 113, 0.7) 2px, transparent 3px),
+      radial-gradient(circle at 80% 30%, rgba(46, 204, 113, 0.6) 2px, transparent 3px),
+      radial-gradient(circle at 50% 80%, rgba(46, 204, 113, 0.8) 3px, transparent 4px),
+      radial-gradient(circle at 70% 60%, rgba(46, 204, 113, 0.5) 2px, transparent 3px);
+    animation: sparkleMove 4s linear infinite;
+    border-radius: 25px;
+    z-index: -1;
+}
+
+/* Tiêu đề lời chào */
 .greeting-message {
-  font-size: 1.8rem; /* Kích thước lớn hơn */
-  color: #2c3e50; /* Màu chữ đậm */
-  margin-bottom: 12px;
-  font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Text-shadow nhẹ */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #34495e;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
 }
 
+/* Dòng phụ bên dưới */
 .greeting-subtext {
-  font-size: 1rem;
-  color: #7f8c8d; /* Màu chữ phụ */
-  font-weight: 500;
-  line-height: 1.5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    color: #7f8c8d;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-top: 5px;
+    max-width: 90%;
+    word-wrap: break-word;
 }
+
+/* Animation keyframes */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes borderGlow {
+    0% {
+        box-shadow:
+            0 0 10px #2ecc71,
+            0 0 20px #27ae60;
+    }
+    50% {
+        box-shadow:
+            0 0 30px #2ecc71,
+            0 0 40px #27ae60;
+    }
+    100% {
+        box-shadow:
+            0 0 10px #2ecc71,
+            0 0 20px #27ae60;
+    }
+}
+
+/* Hiệu ứng sparkle dịch chuyển nhẹ */
+@keyframes sparkleMove {
+    0% {
+        background-position:
+            10% 20%,
+            80% 30%,
+            50% 80%,
+            70% 60%;
+    }
+    50% {
+        background-position:
+            15% 25%,
+            75% 35%,
+            55% 75%,
+            65% 65%;
+    }
+    100% {
+        background-position:
+            10% 20%,
+            80% 30%,
+            50% 80%,
+            70% 60%;
+    }
+}
+
+
+
+
+
+
+/* Keyframes cho hiệu ứng xuất hiện */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Keyframes cho hiệu ứng viền phát sáng */
+@keyframes borderGlow {
+    from {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 
+                    0 0 10px rgba(46, 204, 113, 0.3);
+    }
+    to {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 
+                    0 0 30px rgba(46, 204, 113, 0.8);
+    }
+}
+
+/* ---------- Tùy chỉnh cho điện thoại (màn hình nhỏ) ---------- */
+@media (max-width: 480px) {
+  .greeting-popup {
+    width: 95%; /* Sử dụng 95% chiều rộng màn hình */
+    padding: 20px; /* Giảm padding để gọn gàng hơn */
+    border-radius: 12px;
+    min-width: unset; /* Bỏ giới hạn chiều rộng tối thiểu */
+  }
+
+  .greeting-message {
+    font-size: 1.4rem; /* Giảm cỡ chữ tiêu đề */
+    margin-bottom: 8px;
+  }
+
+  .greeting-subtext {
+    font-size: 0.9rem; /* Giảm cỡ chữ phụ */
+  }
+}
+
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -40%); }
@@ -1377,6 +1569,36 @@ function escapeAttr(s) {
 
 
 <script>
+
+
+    // Hàm tạo hiệu ứng hạt sáng
+    function createParticles() {
+        const container = document.getElementById('particles-js');
+        const numParticles = 50; // Số lượng hạt bạn muốn tạo
+
+        for (let i = 0; i < numParticles; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            // Gán các thuộc tính ngẫu nhiên cho mỗi hạt
+            const size = Math.random() * 8 + 2; // Kích thước từ 2px đến 10px
+            const x = Math.random() * 100; // Vị trí ngẫu nhiên theo chiều ngang
+            const y = Math.random() * 100; // Vị trí ngẫu nhiên theo chiều dọc
+            const delay = Math.random() * 15; // Thời gian delay ngẫu nhiên
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${x}vw`;
+            particle.style.top = `${y}vh`;
+            particle.style.animationDelay = `${delay}s`;
+
+            container.appendChild(particle);
+        }
+    }
+
+    // Gọi hàm này khi trang web tải xong
+    window.onload = createParticles;
+
 
 
     let startY = 0;
