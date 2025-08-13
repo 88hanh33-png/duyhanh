@@ -1373,10 +1373,7 @@ function escapeAttr(s) {
   <div class="greeting-subtext" id="greeting-subtext"></div>
 </div>
 
-<script>
-    // ... các đoạn script hiện có của bạn
-
-    // Hàm mới để lấy vị trí
+// Hàm để lấy vị trí của người dùng
     function getUserLocation() {
         if (navigator.geolocation) {
             // Yêu cầu trình duyệt lấy vị trí
@@ -1418,15 +1415,14 @@ function escapeAttr(s) {
             alert("Trình duyệt của bạn không hỗ trợ lấy vị trí.");
         }
     }
-    
-    // Gọi hàm này khi cần lấy vị trí
-    // Ví dụ: getUserLocation();
-	window.onload = function() {
-    getUserLocation();
-};
-</script>
+
+    // Tự động gọi hàm getUserLocation() khi trang web được tải
+    window.onload = function() {
+        getUserLocation();
+    };
 
 
 
 </body>
+
 </html>
