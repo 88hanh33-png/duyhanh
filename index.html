@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8" />
-<title>Ghi Sổ Tiết Dạy - WebApp</title>
+<title>SDB Oline</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -122,7 +122,7 @@ header h2 {
     .menu-toggle {
         display: flex;
         position: absolute;
-        right: 15px;
+        right: 0px;
         top: 15px;
     }
 
@@ -826,14 +826,11 @@ header .actions {
 
 <div id="particles-js"></div>
 <header>
-    <h2>
-        Trường PTDTBT THCS Thu Cúc <br>
-        Sổ Ghi Đầu Bài và Đánh Giá
-    </h2>
+    <h2 style="font-size: 18px; font-family: 'Lora'; ">TRƯỜNG PTDTBT THCS THU CÚC</h2>
     <div class="actions">
         <div id="teacher-display">
             <i class="fas fa-user-check"></i>
-            <span>Duy Công Hạnh Hạnh</span>
+            <span>Xin chào Thầy Cô</span>
         </div>
         <button id="history-btn">
             <i class="fas fa-history"></i> Lịch sử
@@ -855,7 +852,7 @@ header .actions {
 <main>
 
   <form id="login-form" onsubmit="event.preventDefault(); login();" novalidate>
-  <h2>Đăng Nhập Hệ Thống</h2>
+  <h2 style="font-size: 24px;">Đăng Nhập Hệ Thống</h2>
   
   <input type="text" id="username" placeholder="Tên đăng nhập" autocomplete="username" required />
   
@@ -871,7 +868,7 @@ header .actions {
   </button>
   
   <div class="login-footer">
-    Hệ thống quản lý tiết dạy <br >Trường PTDTBT THCS Thu Cúc
+    Hệ thống quản lý tiết dạy <br >TRƯỜNG PTDTBT THCS THU CÚC
   </div>
   
   <div id="login-error" aria-live="polite"></div>
@@ -879,7 +876,7 @@ header .actions {
 
   <form id="record-form" onsubmit="event.preventDefault(); submitForm();" style="display:none;" novalidate>
  
-
+<h2 style="color: #000000; text-align: center; font-size: 16px; font-weight: bold; font-family: 'Lora', serif;">SỔ GHI TÊN BÀI HỌC VÀ ĐÁNH GIÁ</h2>
     <div class="row">
       <div>
         <label for="khoi">Chọn khối</label>
@@ -1028,7 +1025,7 @@ document.getElementById('show-password').addEventListener('change', function() {
 });
 // Hàm hiển thị popup chào/tạm biệt
 
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxIpekpgAjMfdqmnTgDRV1mh7Duj5sXlm6Xwm1ambh2Lx3OYzI9b2e1r8KkMlTURqF8/exec"; 
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw_hjyyNoBI4RjeeFmw3lcZM33_HMnVgyqC6VAXPog0w_5KgYIJPRHJ4SJ1-0Bxx9zC/exec"; 
 // => THAY bằng URL WebApp do bạn deploy (Apps Script)
 
 const lopTheoKhoi = {
@@ -2049,5 +2046,4 @@ function displaySummary(summaryData) {
 </body>
 
 </html>
-
 
