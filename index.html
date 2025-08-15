@@ -790,7 +790,7 @@ header .actions {
     box-shadow: 0 0 30px rgb(0 0 0 / 0.25);
 }
 .summary-head {
-    padding: 18px 24px;
+    padding: 10px 10px;
     border-bottom: 1px solid #ddd;
     display: flex;
     justify-content: space-between;
@@ -814,17 +814,22 @@ header .actions {
     color: #e74c3c;
 }
 #summary-body {
-    padding: 20px 24px;
+    padding: 10px 10px;
     overflow-y: auto;
     flex-grow: 1;
 }
 
 </style>
+
+
+
+
+
 </head>
 <body>
 
-
 <div id="particles-js"></div>
+
 <header>
     <h2 style="font-size: 18px; font-family: 'Lora'; ">TRƯỜNG PTDTBT THCS THU CÚC</h2>
     <div class="actions">
@@ -836,7 +841,7 @@ header .actions {
             <i class="fas fa-history"></i> Lịch sử
         </button>
         <button id="summary-btn">
-            <i class="fas fa-chart-bar"></i> Thống kê
+            <i class="fas fa-chart-bar"></i> Thống kê cá nhân
         </button>
         <button id="logout-btn">
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -848,6 +853,58 @@ header .actions {
         <span class="bar"></span>
     </button>
 </header>
+
+
+
+
+<div id="ranking-marquee" style="background:#f0f0f0; padding:5px; overflow:hidden; white-space:nowrap; font-weight:bold;">
+    Đang tải dữ liệu xếp hạng tổng số tiết...
+</div>
+
+<script>
+async function loadRanking() {
+    try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzGlxMbILweNROYRLwg4VlRRKvhQUF0OXmf4I6pLAEC4pCOcFxkkj2A8ChKyf9yS_j7/exec"); // Thay URL Web App của bạn
+        const data = await res.json();
+
+        if (data.success && data.ranking.length > 0) {
+            // Lấy dữ liệu cũ từ localStorage
+            let oldRanking = JSON.parse(localStorage.getItem("rankingData")) || [];
+
+            // Tạo text có mũi tên
+            let text = data.ranking.map((t, i) => {
+                let oldPos = oldRanking.findIndex(o => o.name === t.name);
+                let arrow = "";
+
+                if (oldPos !== -1) {
+                    if (oldPos > i) arrow = " <span style='color:green;'>▲</span>";
+                    else if (oldPos < i) arrow = " <span style='color:red;'>▼</span>";
+                }
+
+                return `<span style="margin-right:20px;">${i+1}. <span style="color:#007BFF;">${t.name}</span> (${t.sessions} tiết)${arrow}</span>`;
+            }).join(" ");
+
+            document.getElementById("ranking-marquee").innerHTML = `<marquee behavior="scroll" direction="left" scrollamount="5">${text}</marquee>`;
+
+            // Lưu dữ liệu hiện tại để so sánh lần sau
+            localStorage.setItem("rankingData", JSON.stringify(data.ranking));
+        } else {
+            document.getElementById("ranking-marquee").innerText = "Không có dữ liệu xếp hạng.";
+        }
+    } catch (err) {
+        document.getElementById("ranking-marquee").innerText = "Lỗi tải dữ liệu xếp hạng.";
+    }
+}
+
+loadRanking();
+</script>
+
+
+
+
+
+
+
 
 <main>
 
@@ -975,7 +1032,11 @@ header .actions {
 <div id="summary-popup" role="dialog" aria-modal="true" aria-labelledby="summary-title" tabindex="-1" style="display:none;">
   <div class="summary-panel" role="document">
     <div class="summary-head">
-      <h3 id="summary-title">Thống kê Tiết Dạy</h3>
+      <h3 id="summary-title" 
+    style="margin: 0 auto; text-align: center; background: #ffffff; color: black; padding: 6px 10px; border-radius: 5px; font-weight: bold;">
+    TUẦN NÀY
+</h3>
+
       <button class="close-summary" id="close-summary" title="Đóng">&times;</button>
     </div>
     <div id="summary-body">
@@ -1025,7 +1086,7 @@ document.getElementById('show-password').addEventListener('change', function() {
 });
 // Hàm hiển thị popup chào/tạm biệt
 
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw_hjyyNoBI4RjeeFmw3lcZM33_HMnVgyqC6VAXPog0w_5KgYIJPRHJ4SJ1-0Bxx9zC/exec"; 
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzGlxMbILweNROYRLwg4VlRRKvhQUF0OXmf4I6pLAEC4pCOcFxkkj2A8ChKyf9yS_j7/exec"; 
 // => THAY bằng URL WebApp do bạn deploy (Apps Script)
 
 const lopTheoKhoi = {
@@ -1635,18 +1696,66 @@ function displaySummary(summaryData) {
           background-color: #2c3e50;
           color: white;
       }
-      .summary-info {
-        font-size: 1.1em;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #555;
-        text-align: center;
-      }
+    
     </style>
 
-  <div class="summary-info-card">
-    <div class="summary-info">Tổng số tiết đã ghi: <strong>${summaryData.totalSessions}</strong></div>
-</div>
+ <style>
+  .summary-info-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 10px;
+    max-width: 420px;
+    margin: 20px auto;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .summary-info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .summary-icon {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+    border-radius: 50%;
+    padding: 15px;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    min-height: 60px;
+  }
+
+  .summary-details {
+    flex: 1;
+  }
+
+  .summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .summary-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0078d7;
+    margin-bottom: 4px;
+  }
+
+  .summary-desc {
+    font-size: 14px;
+    color: #777;
+  }
+</style>
+
 
 <div class="summary-table-container">
   <table class="summary-table">
@@ -1658,19 +1767,19 @@ function displaySummary(summaryData) {
     </thead>
     <tbody>
       <tr>
-        <td>Tốt</td>
+        <td>TỐT</td>
         <td>${summaryData.ratings['Tốt'] || 0}</td>
       </tr>
       <tr>
-        <td>Khá</td>
+        <td>KHÁ</td>
         <td>${summaryData.ratings['Khá'] || 0}</td>
       </tr>
       <tr>
-        <td>Đạt</td>
+        <td>ĐẠT</td>
         <td>${summaryData.ratings['Đạt'] || 0}</td>
       </tr>
       <tr>
-        <td>Không đạt</td>
+        <td>KHÔNG ĐẠT</td>
         <td>${summaryData.ratings['Không đạt'] || 0}</td>
       </tr>
       
@@ -1678,9 +1787,29 @@ function displaySummary(summaryData) {
   </table>
 </div>
 
-    
+<div class="summary-info-card" 
+     style="background: white;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 12px auto;
+            max-width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;">
+    <div class="summary-info" 
+         style="font-size: 17px; font-weight: 500; color: #444; text-align: center;">
+        📊 Tổng số tiết đã dạy: 
+        <strong style="font-size: 19px; color: #007BFF; margin-left: 6px;">
+            ${summaryData.totalSessions}
+        </strong>
+    </div>
+</div>
+
+
   `;
-  
   summaryBody.innerHTML = htmlContent;
 }
 
@@ -1731,13 +1860,7 @@ function displaySummary(summaryData) {
 <style>
 
 /* Container chính cho phần thống kê */
-.summary-table-container {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    margin-top: 20px;
-}
+
 
 /* Bảng thống kê */
 .summary-table {
@@ -1814,7 +1937,7 @@ function displaySummary(summaryData) {
     background-color: #e8f6f3;
     border: 1px solid #d4e8e1;
     border-radius: 0px;
-    padding: 5px 5px;
+    padding: 0px 0px;
     text-align: center;
     font-size: 1.1rem;
     font-weight: 600;
