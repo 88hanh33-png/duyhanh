@@ -1757,6 +1757,13 @@ function displaySummary(summaryData) {
 </style>
 
 
+<style>
+.summary-table th,
+.summary-table td {
+  font-weight: bold;
+}
+</style>
+
 <div class="summary-table-container">
   <table class="summary-table">
     <thead>
@@ -1782,10 +1789,10 @@ function displaySummary(summaryData) {
         <td>KHÔNG ĐẠT</td>
         <td>${summaryData.ratings['Không đạt'] || 0}</td>
       </tr>
-      
     </tbody>
   </table>
 </div>
+
 
 <div class="summary-info-card" 
      style="background: white;
@@ -1800,7 +1807,7 @@ function displaySummary(summaryData) {
             align-items: center;
             justify-content: center;">
     <div class="summary-info" 
-         style="font-size: 17px; font-weight: 500; color: #444; text-align: center;">
+         style="font-size: 17px; font-weight: 500; color: #000000; text-align: center;">
         📊 Tổng số tiết đã dạy: 
         <strong style="font-size: 19px; color: #007BFF; margin-left: 6px;">
             ${summaryData.totalSessions}
@@ -2169,5 +2176,4 @@ function displaySummary(summaryData) {
 </body>
 
 </html>
-
 
